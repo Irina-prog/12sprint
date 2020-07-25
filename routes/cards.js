@@ -1,11 +1,14 @@
-const { Router } = require('express');
+import express from 'express';
+import loadJson from '../json.js';
 
-const cards = require('../data/cards.json');
-
-const router = new Router();
+const router = new express.Router();
 
 router.get('/cards', (req, res) => {
-  res.send(cards);
+  loadJson('./data/cards.json').then((cards) => {
+    res.send(cards);
+  }, () => {
+    res.status(503).send({ mesage: 'Ошибка чтения cards.json' });
+  });
 });
 
-module.exports = router;
+export default router;

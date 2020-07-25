@@ -1,27 +1,33 @@
-const { Router } = require('express');
-const users = require('../data/users.json');
+import express from 'express';
+import loadJson from '../json.js';
 
-const router = new Router();
+const router = new express.Router();
+
+function handleJsonError(res) {
+  res.status(503).send({ mesage: 'Ошибка чтения users.json' });
+}
 
 function getUserById(req, res, next) {
   const { id } = req.params;
-  const user = users.find((u) => u._id === id); // eslint-disable-line no-underscore-dangle
-  if (user) {
-    req.user = user;
-    next();
-  } else {
-    res.send({
-      message: 'Нет пользователя с таким id',
-    });
-  }
+  loadJson('./data/users.json').then((users) => {
+    const user = users.find((u) => u._id === id); // eslint-disable-line no-underscore-dangle
+    if (user) {
+      req.user = user;
+      next();
+    } else {
+      res.send({
+        message: 'Нет пользователя с таким id',
+      });
+    }
+  }, () => handleJsonError(res));
 }
 
 router.get('/users', (req, res) => {
-  res.send(users);
+  loadJson('./data/users.json').then((users) => res.send(users), () => handleJsonError(res));
 });
 
 router.get('/users/:id', getUserById, (req, res) => {
   res.send(req.user);
 });
 
-module.exports = router;
+export default router;
