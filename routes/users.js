@@ -1,7 +1,7 @@
-import express from 'express';
-import loadJson from '../json.js';
+const {Router} = require('express');
+const loadJson = require('../json');
 
-const router = new express.Router();
+const router = new Router();
 
 function handleJsonError(res) {
   res.status(503).send({ mesage: 'Ошибка чтения users.json' });
@@ -30,4 +30,4 @@ router.get('/users/:id', getUserById, (req, res) => {
   res.send(req.user);
 });
 
-export default router;
+module.exports = router;

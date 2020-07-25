@@ -1,12 +1,12 @@
-import express from 'express';
-import path from 'path';
-import cards from './routes/cards.js';
-import users from './routes/users.js';
+const express = require('express');
+const path = require('path');
+const cards = require('./routes/cards');
+const users = require('./routes/users');
 
 const { PORT = 3000 } = process.env;
 const app = express();
 app.use('/', cards, users);
-app.use(express.static(path.join(process.cwd(), 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use((req, res) => {
   res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
 });

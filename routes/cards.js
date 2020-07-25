@@ -1,7 +1,7 @@
-import express from 'express';
-import loadJson from '../json.js';
+const {Router} = require('express');
+const loadJson = require('../json');
 
-const router = new express.Router();
+const router = new Router();
 
 router.get('/cards', (req, res) => {
   loadJson('./data/cards.json').then((cards) => {
@@ -11,4 +11,4 @@ router.get('/cards', (req, res) => {
   });
 });
 
-export default router;
+module.exports = router;
